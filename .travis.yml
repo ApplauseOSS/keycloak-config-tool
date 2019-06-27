@@ -1,0 +1,12 @@
+dist: xenial
+sudo: required
+
+language: python
+python:
+  - '3.6'
+
+services:
+  - docker
+
+script:
+  - scripts/ci.sh
