@@ -1,0 +1,46 @@
+version: '2'
+services:
+
+  keycloak_config:
+    build: .
+    environment:
+      KEYCLOAK_BASE_URL: http://keycloak:8080/auth
+      KEYCLOAK_USERNAME: admin
+      KEYCLOAK_PASSWORD: admin
+      DEPLOY_CONFIG_DIR: "/deploy"
+      DEPLOY_ENV: local
+      KEYCLOAK_TIMEOUT: 300
+    volumes:
+      - "./test/data/deploy:/deploy"
+    depends_on:
+      - keycloak
+
+  keycloak:
+    image: jboss/keycloak:3.1.0.Final
+    ports:
+      - "8080:8080"
+    environment:
+      DEBUG_PORT: 5005
+      KEYCLOAK_LOGLEVEL: DEBUG
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_MYSQL_HOST: mysql_keycloak
+      KEYCLOAK_MYSQL_PORT: 3306
+      KEYCLOAK_MYSQL_DATABASE: keycloak
+      KEYCLOAK_MYSQL_USER: keycloak
+      KEYCLOAK_MYSQL_PASSWORD: keycloak
+      PRIVATE_BIND_ADDR: keycloak
+    depends_on:
+      - mysql_keycloak
+    links:
+      - mysql_keycloak:mysql_keycloak
+
+  mysql_keycloak:
+    image: mysql:5.6.34
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: keycloak
+      MYSQL_USER: keycloak
+      MYSQL_PASSWORD: keycloak
+      MYSQL_ROOT_PASSWORD: root_password
