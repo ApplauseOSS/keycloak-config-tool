@@ -2,13 +2,13 @@
 
 from distutils.core import setup
 from keycloak_config import __program_name__
-from keycloak_config import __version__
 from setuptools import find_packages
 
 import os
 
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, "README.md")).read()
+VERSION = open(os.path.join(here, "VERSION")).read().strip()
 
 install_requires = [
     "click==6.7",
@@ -18,7 +18,7 @@ install_requires = [
 
 setup(
     name=__program_name__,
-    version=__version__,
+    version=VERSION,
     description="This package allows for configuration based updates to Keycloak.",
     long_description=README,
     long_description_content_type='text/markdown',
@@ -39,5 +39,9 @@ setup(
     entry_points={
         "console_scripts":
             ["keycloak-config-tool=keycloak_config.__main__:main"]
-    }
+    },
+    # Include VERSION file in sdist. This is mostly for the benefit of tox
+    data_files=[
+        ('version', ['VERSION']),
+    ]
 )
