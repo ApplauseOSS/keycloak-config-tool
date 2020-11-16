@@ -96,7 +96,7 @@ class CreateUserAction(Action):
         print('==== Processed user "{0}" roles.'.format(self.email))
 
         if self.password:
-            print('==== Updating password for user "{0}"...'.format(self.email, self.realm_name))
+            print('==== Updating password for user "{0}"...'.format(self.email))
             password_payload = {
                 'value': self.password,
                 'type': 'password',

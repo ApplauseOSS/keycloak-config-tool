@@ -12,7 +12,7 @@ VERSION = open(os.path.join(here, "VERSION")).read().strip()
 
 install_requires = [
     "click==6.7",
-    "requests==2.20.0",
+    "requests>=2.20.0",
     "kms-encryption-toolbox>=0.0.13"
 ]
 
