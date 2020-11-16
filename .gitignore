@@ -7,24 +7,27 @@ __pycache__/
 *.py[cod]
 
 # Distribution / packaging
+*.egg
+*.egg-info/
 .Python
-env/
+.eggs/
+.env
+.installed.cfg
+.venv
 build/
 develop-eggs/
 dist/
+docs/
 downloads/
 eggs/
-.eggs/
+env/
 lib/
 lib64/
 parts/
 sdist/
-docs/
-*.egg-info/
-.installed.cfg
-*.egg
+venv/
 
 # Misc
-tmp/
-.tox
 .cache
+.tox
+tmp/

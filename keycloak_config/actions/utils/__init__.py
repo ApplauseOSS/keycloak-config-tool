@@ -86,7 +86,7 @@ def get_user_by_email(realm_name, email, keycloak_client):
     :return: The user configuration
     """
 
-    path = '/admin/realms/{0}/users'.format(realm_name, params={'email': email})
+    path = '/admin/realms/{0}/users'.format(realm_name)
     get_response = keycloak_client.get(path)
 
     if get_response.status_code == requests.codes.ok:

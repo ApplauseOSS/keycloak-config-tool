@@ -18,16 +18,15 @@ This will create an executable named `keycloak-config-tool` in your path.
 
 ## Running tests
 
-You need tox in order to run tests. If you don't have it, you can execute 
+You need `tox` in order to run tests. If you don't have it, simply run the following to install it:
 ```
 pip3 install tox
 ``` 
 
-Then you can run tests just by calling
+You can run tests just by calling in the repository root:
 ```
 tox
 ```
-from the root repository folder.
 
 ## Command-line Usage
 
