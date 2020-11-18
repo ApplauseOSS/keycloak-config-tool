@@ -141,6 +141,56 @@ Creates a user in Keycloak. ***NOTE:*** The `username` field is not needed. This
 | `password`    |    No     | ***NONE*** | The password to apply to the user.                                                                                | `"password": "test123"`    |
 | `user`        |    Yes    | ***NONE*** | [The Keycloak user representation.](http://www.keycloak.org/docs-api/3.0/rest-api/index.html#_userrepresentation) | `"user": { ... }`          |
 
+
+#### createRealmIfNotExists
+
+Creates a new realm in Keycloak, if not exists.
+
+| Property Name | Required? |  Default   | Description                     | Example                    |
+|:--------------|:---------:|:----------:|:--------------------------------|:---------------------------|
+| `realmName`   |    Yes    | ***NONE*** | The name of the realm to create | `"realmName": "test"`      |
+
+
+#### setClientScopes
+
+Creates a new, updates existing and deletes not specified (excluding build-in) client scopes in Keycloak.
+
+| Property Name | Required? |  Default   | Description                                                                                                                       | Example                                        |
+|:--------------|:---------:|:----------:|:----------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------------|
+| `realmName`   |    Yes    | ***NONE*** | The name of the realm to create                                                                                                   | `"realmName": "test"`                          |
+| `file`        |    Yes    | ***NONE*** | The file containing the clients to be imported. File should contains array of `{ "name": string, "description": string }` objects | `"realmFile": "./keycloak/client-scoeps.json"` |
+
+
+#### setRoles
+
+Creates a new, updates existing and deletes not specified roles in Keycloak.
+
+| Property Name | Required? |  Default   | Description                                                                                                                       | Example                                     |
+|:--------------|:---------:|:----------:|:----------------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------|
+| `realmName`   |    Yes    | ***NONE*** | The name of the realm to create                                                                                                   | `"realmName": "test"`                       |
+| `file`        |    Yes    | ***NONE*** | The file containing the roles to be imported. File should contains array of `{ "name": string, "description": string }` objects | `"realmFile": "./keycloak/roles.json"`        |
+
+
+#### setRealmScopeMapping
+
+Add or remove realm scope mapping (role => client scope) in Keycloak.
+
+| Property Name | Required? |  Default   | Description                                                                                                                          | Example                                                          |
+|:--------------|:---------:|:----------:|:-------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------|
+| `realmName`   |    Yes    | ***NONE*** | The name of the realm to create                                                                                                      | `"realmName": "test"`                                            |
+| `file`        |    Yes    | ***NONE*** | The file containing the realm scope mapping to be imported. File should contains array of `{ "clientScope": string, "roles": string[] }` objects | `"realmFile": "./keycloak/realm-scope-mapping.json"` |
+
+
+#### setClients
+
+Creates new and updates existing clients (deleting is not done, by design) in Keycloak.
+
+| Property Name | Required? |  Default   | Description                                                                                                                                                                                           | Example                                 |
+|:--------------|:---------:|:----------:|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:----------------------------------------|
+| `realmName`   |    Yes    | ***NONE*** | The name of the realm to create                                                                                                                                                                       | `"realmName": "test"`                   |
+| `file`        |    Yes    | ***NONE*** | The file containing the clients to be imported. File should contains array of partial [ClientRepresentation](https://www.keycloak.org/docs-api/7.0/rest-api/index.html#_clientrepresentation) objects | `"realmFile": "./keycloak/client.json"` |
+
+
 #### custom
 
 Run a custom action. The custom action file must contain a class named `CustomAction`. See [test/data/deploy/src/keycloak/test_custom.py](test/data/deploy/src/keycloak/test_custom.py) for an example.

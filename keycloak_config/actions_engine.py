@@ -5,11 +5,16 @@ Actions Engine.
 
 from .actions.action import InvalidActionConfigurationException
 from .actions.create_client import CreateClientAction
+from .actions.create_realm_if_not_exists import CreateRealmIfNotExistsAction
 from .actions.create_role import CreateRoleAction
 from .actions.create_user import CreateUserAction
 from .actions.custom_action import CustomActionWrapper
 from .actions.delete_client import DeleteClientAction
 from .actions.import_realm import ImportRealmAction
+from .actions.set_client_scopes import SetClientScopesAction
+from .actions.set_clients import SetClientsAction
+from .actions.set_realm_scope_mapping import SetRealmScopeMappingAction
+from .actions.set_roles import SetRolesAction
 
 
 class ActionsEngine(object):
@@ -19,10 +24,15 @@ class ActionsEngine(object):
         'createUser': CreateUserAction,
         'createRole': CreateRoleAction,
         'deleteClient': DeleteClientAction,
+        'createRealmIfNotExists': CreateRealmIfNotExistsAction,
+        'setClientScopes': SetClientScopesAction,
+        'setRoles': SetRolesAction,
+        'setRealmScopeMapping': SetRealmScopeMappingAction,
+        'setClients': SetClientsAction,
         'custom': CustomActionWrapper
     }
 
-    def __init__(self, deploy_env, config_file_dir, actions_config_json, json_loader):
+    def __init__(self, deploy_env, config_file_dir, actions_config_json, json_config_loader):
         self.actions = []
         self.actions_by_name = {}
         self.deploy_env = deploy_env
@@ -30,7 +40,7 @@ class ActionsEngine(object):
         self.action_config_json = actions_config_json
 
         self.action_kwargs = {
-            'json_loader': json_loader
+            'json_config_loader': json_config_loader
         }
 
         for action_config_json in actions_config_json:

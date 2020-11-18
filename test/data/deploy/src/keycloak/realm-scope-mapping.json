@@ -1,0 +1,42 @@
+[
+  {
+    "clientScope": "scope1:view",
+    "roles": [
+      "role_1",
+      "role_2"
+    ]
+  },
+  {
+    "clientScope": "scope1:management",
+    "roles": [
+      "role_2"
+    ]
+  },
+  {
+    "clientScope": "scope2:view",
+    "roles": [
+      "role_1",
+      "role_2"
+    ]
+  },
+  {
+    "clientScope": "scope2:management",
+    "roles": [
+      "role_2"
+    ]
+  },
+  {
+    "clientScope": "scope3:view",
+    "roles": [
+      "role_1",
+      "role_2"
+    ]
+  },
+  {
+    "clientScope": "scope3:management",
+    "roles": [
+      "role_2"
+    ]
+  }
+]
+

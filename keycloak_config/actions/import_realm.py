@@ -7,7 +7,6 @@ from .action import Action
 from .action import ActionExecutionException
 from .action import InvalidActionConfigurationException
 
-import os
 import requests
 import urllib
 
@@ -24,7 +23,7 @@ class ImportRealmAction(Action):
 
         return deploy_env == 'local'
 
-    def __init__(self, name, config_file_dir, action_config_json, json_loader, *args, **kwargs):
+    def __init__(self, name, config_file_dir, action_config_json, json_config_loader, *args, **kwargs):
         """
         Constructor.
         :param name: The action name.
@@ -38,13 +37,7 @@ class ImportRealmAction(Action):
         if 'realmFile' not in action_config_json:
             raise InvalidActionConfigurationException('Configuration "{0}" missing property "realmFile"'.format(name))
 
-        self.realm_file_path = os.path.join(config_file_dir, action_config_json['realmFile'])
-
-        if not os.path.isfile(self.realm_file_path):
-            raise InvalidActionConfigurationException('Configuration "{0}" realm file not found: {1}'.format(name, self.realm_file_path))
-
-        with open(self.realm_file_path, 'r') as f:
-            self.realm_data = json_loader.load_json(f.read())
+        self.realm_data = json_config_loader.load_config(action_config_json['realmFile'])
 
         self.realm_name = self.realm_data.get('realm', None)
 

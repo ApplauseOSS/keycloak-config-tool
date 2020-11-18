@@ -11,9 +11,9 @@ class InvalidConfigurationException(Exception):
     pass
 
 
-class DeployConfig(object):
+class JsonConfigLoader(object):
 
-    def __init__(self, deploy_config_dir, deploy_env, json_loader):
+    def __init__(self, deploy_src_dir, deploy_var_dir, deploy_env, json_loader):
         """
         Constructor.
         :param deploy_config_dir: The base directory for the deployment configuration.
@@ -21,22 +21,13 @@ class DeployConfig(object):
         :param json_loader: An object able to load JSON contents into a Python object.
         """
 
-        self.deploy_config_dir = deploy_config_dir
+        self.json_loader = json_loader
         self.deploy_env = deploy_env
-        self.deploy_src_dir = os.path.join(deploy_config_dir, 'src')
-        self.deploy_config_file = os.path.join(self.deploy_src_dir, 'keycloak.json')
-        self.deploy_var_dir = os.path.join(deploy_config_dir, 'var')
+        self.deploy_src_dir = deploy_src_dir
+        self.deploy_var_dir = deploy_var_dir
         self.deploy_keycloak_var_dir = os.path.join(self.deploy_var_dir, 'keycloak')
 
-        if not os.path.isfile(self.deploy_config_file):
-            raise InvalidConfigurationException('Configuration file not found: {0}'.format(self.deploy_config_file))
-
-        with open(self.deploy_config_file, 'r') as f:
-            self.raw_config = f.read()
-
         self.variables = self.load_variables()
-        self.processed_config = self.process_config_variables()
-        self.json_config = json_loader.load_json(self.processed_config)
 
     def load_variables(self):
         """
@@ -77,7 +68,19 @@ class DeployConfig(object):
 
         return variables
 
-    def process_config_variables(self):
+    def load_config(self, path):
+        config_path = os.path.join(self.deploy_src_dir, path)
+
+        if not os.path.isfile(config_path):
+            raise InvalidConfigurationException('File not found: {0}'.format(config_path))
+
+        with open(config_path, 'r') as f:
+            raw_config = f.read()
+
+        processed_config = self.process_config_variables(raw_config)
+        return self.json_loader.load_json(processed_config)
+
+    def process_config_variables(self, raw_config):
         """
         Process the variables contained in the configuration.
         :return: The processed configuration.
@@ -93,13 +96,4 @@ class DeployConfig(object):
                 return self.variables[variable]
             raise InvalidConfigurationException('Unknown variable: {0}'.format(variable))
 
-        return re.sub(r'#\{([^}]+)}', replacement, self.raw_config)
-
-    def get_json_config(self):
-        return self.json_config
-
-    def get_config_dir(self):
-        return self.deploy_src_dir
-
-    def get_processed_config(self):
-        return self.processed_config
+        return re.sub(r'#\{([^}]+)}', replacement, raw_config)

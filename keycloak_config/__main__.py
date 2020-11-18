@@ -3,9 +3,9 @@ Keycloak Configuration Tool.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 from .actions_engine import ActionsEngine
-from .deploy_config import DeployConfig
 from .encryption import EncryptionHelper
 from .json import JsonLoader
+from .json_config_loader import JsonConfigLoader
 from .keycloak_client import KeycloakClient
 
 import click
@@ -18,55 +18,55 @@ VERSION_MESSAGE = '%(prog)s version %(version)s Applause AQI Inc. 2017. All righ
 
 @click.command()
 @click.option(
-        '--keycloak-base-url',
-        type=click.STRING,
-        required=True,
-        help='The base URL for the Keycloak service'
+    '--keycloak-base-url',
+    type=click.STRING,
+    required=True,
+    help='The base URL for the Keycloak service'
 )
 @click.option(
-        '--keycloak-timeout',
-        type=click.INT,
-        default=180,
-        help='The timeout to use while waiting for Keycloak to become available'
+    '--keycloak-timeout',
+    type=click.INT,
+    default=180,
+    help='The timeout to use while waiting for Keycloak to become available'
 )
 @click.option(
-        '--keycloak-username',
-        type=click.STRING,
-        required=True,
-        help='The Keycloak administrator username'
+    '--keycloak-username',
+    type=click.STRING,
+    required=True,
+    help='The Keycloak administrator username'
 )
 @click.option(
-        '--keycloak-password',
-        type=click.STRING,
-        required=True,
-        help='The Keycloak administrator password'
+    '--keycloak-password',
+    type=click.STRING,
+    required=True,
+    help='The Keycloak administrator password'
 )
 @click.option(
-        '--deploy-config-dir',
-        type=click.Path(exists=True),
-        required=True,
-        help='The path to the deployment configuration directory'
+    '--deploy-config-dir',
+    type=click.Path(exists=True),
+    required=True,
+    help='The path to the deployment configuration directory'
 )
 @click.option(
-        '--deploy-env',
-        type=click.STRING,
-        required=True,
-        help='The target deployment environment'
+    '--deploy-env',
+    type=click.STRING,
+    required=True,
+    help='The target deployment environment'
 )
 @click.option(
-        '--config-only',
-        is_flag=True,
-        help='If supplied, the configuration is displayed, and no action is taken'
+    '--config-only',
+    is_flag=True,
+    help='If supplied, the configuration is displayed, and no action is taken'
 )
 @click.option(
-        '--encryption-prefix',
-        type=click.STRING,
-        help='Prefix of all encrypted values to be used to determine if any decryption is required'
+    '--encryption-prefix',
+    type=click.STRING,
+    help='Prefix of all encrypted values to be used to determine if any decryption is required'
 )
 @click.option(
-        '--aws-profile',
-        type=click.STRING,
-        help='AWS profile to be used for contacting KMS when decryption is required'
+    '--aws-profile',
+    type=click.STRING,
+    help='AWS profile to be used for contacting KMS when decryption is required'
 )
 def main(
         keycloak_base_url,
@@ -82,15 +82,19 @@ def main(
     # 'Unbuffer' stdout
     sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 1)
 
+    deploy_src_dir = os.path.join(deploy_config_dir, 'src')
+    deploy_var_dir = os.path.join(deploy_config_dir, 'var')
+
     encryption_helper = EncryptionHelper(encryption_prefix, aws_profile)
     json_loader = JsonLoader(encryption_helper)
-    config = DeployConfig(deploy_config_dir, deploy_env, json_loader)
+    json_config_loader = JsonConfigLoader(deploy_src_dir, deploy_var_dir, deploy_env, json_loader)
+    actions_config = json_config_loader.load_config('keycloak.json')
 
     if config_only:
-        print(config.get_processed_config())
+        print(actions_config)
         return
 
-    actions_engine = ActionsEngine(deploy_env, config.get_config_dir(), config.get_json_config(), json_loader)
+    actions_engine = ActionsEngine(deploy_env, deploy_src_dir, actions_config, json_config_loader)
 
     if actions_engine.is_empty():
         print("==== There are no actions to execute.")

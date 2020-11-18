@@ -251,5 +251,38 @@
     "description": "Delete the test client",
     "realmName": "test",
     "clients": ["test-client-delete"]
+  },
+  {
+    "name": "createTestRealm",
+    "action": "createRealmIfNotExists",
+    "realmName": "test_2"
+  },
+  {
+    "name": "setTestClientScopes",
+    "action": "setClientScopes",
+    "description": "Set client scopes",
+    "realmName": "test_2",
+    "file": "keycloak/client-scopes.json"
+  },
+  {
+    "name": "setTestRoles",
+    "action": "setRoles",
+    "description": "Set roles",
+    "realmName": "test_2",
+    "file": "keycloak/roles.json"
+  },
+  {
+    "name": "setTestRealmScopeMapping",
+    "action": "setRealmScopeMapping",
+    "description": "Set realm scope mapping",
+    "realmName": "test_2",
+    "file": "keycloak/realm-scope-mapping.json"
+  },
+  {
+    "name": "setTestClients",
+    "action": "setClients",
+    "description": "Set clients",
+    "realmName": "test_2",
+    "file": "keycloak/clients.json"
   }
 ]

@@ -1,0 +1,18 @@
+[
+  {
+    "clientId": "test-client",
+    "rootUrl": "#{TEST_CLIENT_ROOT_URL}",
+    "redirectUris": [
+      "#{TEST_CLIENT_ROOT_URL}/*"
+    ],
+    "defaultClientScopes": [
+      "offline_access",
+      "scope1:view",
+      "scope1:management",
+      "scope2:view",
+      "scope2:management",
+      "scope3:view",
+      "scope3:management"
+    ]
+  }
+]
