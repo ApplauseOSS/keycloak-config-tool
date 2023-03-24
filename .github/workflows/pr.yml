@@ -5,7 +5,7 @@
 jobs:
   unit-tests:
     secrets: inherit
-    uses: applauseaqi/gha-workflows/.github/workflows/pr.yml
+    uses: applauseaqi/gha-workflows/.github/workflows/pr.yml@master
     with:
       serviceName: keycloak-config-tool
       shellScript: ./scripts/ci.sh
