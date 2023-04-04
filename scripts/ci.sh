@@ -3,5 +3,5 @@
 export CRYPTOGRAPHY_DONT_BUILD_RUST=1
 
 # Install/run tox
-pip install tox
+pip install 'tox<4'
 tox
